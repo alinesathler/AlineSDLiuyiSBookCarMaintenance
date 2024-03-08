@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Reflection.Emit;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
@@ -19,6 +20,7 @@ using System.Xml.Linq;
 //REV00 - 2024/03/06 - Initial version
 //REV01 - 2024/03/07 - Validation helper class: postal code, province code and phone number. Close and Reset buttons. Name, address and email inputs.
 //REV02 - 2024/03/08 - City, province code, postal code, home phone and cell phone inputs.
+//REV03 - 2024/03/08 - Make and model, year and appointment date inputs. Set focus to first input with an error.
 
 namespace AlineSDLiuyiSBookCarMaintenance {
     public partial class CarMaintenance : Form {
@@ -34,7 +36,7 @@ namespace AlineSDLiuyiSBookCarMaintenance {
 
         //Clean error message and background colors for the default.
         private void ChangeToInitialState() {
-            //Clear error and status messages.
+            //Clear errors.
             lblErrors.Text = String.Empty;
 
             //Reset backgrounds colors.
@@ -91,8 +93,20 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             string cellPhone = (txtCellPhone.Text).Trim();
             bool isCellPhone = ValidationHelper.IsValidPhoneNumber(cellPhone);
 
-            string email = (txtEmail.Text).Trim();
+            string email = (txtEmail.Text).Trim().ToLower();
             bool isEmail = false;
+
+            string makeModel = ValidationHelper.Capitalize((txtMakeModel.Text).Trim());
+            bool isMakeModel = false;
+
+            string year = (txtYear.Text).Trim();
+            bool isYear = false;
+
+            DateTime appointmentDate = dtpDate.Value.Date;
+            bool isAppointmentDate = false;
+
+            //Instanciating a list with controls that have errors.
+            List <Control> controlErros = new List<Control>();
 
             ChangeToInitialState();
 
@@ -111,16 +125,18 @@ namespace AlineSDLiuyiSBookCarMaintenance {
                 cellPhone = cellPhone.Substring(0, 3) + "-" + cellPhone.Substring(3, 3) + "-" + cellPhone.Substring(6);
             }
 
-            //Change backgroud color and display error message for customer name input.
+            //Change backgroud color, display error message for customer name input and add control to the list of errors.
             if (string.IsNullOrEmpty(customerName)) {
                 txtCustomerName.BackColor = Color.LightPink;
-                lblErrors.Text += $"Please enter a valid customer name.\n";
+                lblErrors.Text += $"Please enter a customer name.\n";
+
+                controlErros.Add(txtCustomerName);
             } else {
                 isName = true;
             }
 
+            //Check if email is a valid email address.
             if (!string.IsNullOrEmpty(email)) {
-                //Check if email is a validade email address.
                 try {
                     MailAddress mailAddress = new MailAddress(email);
 
@@ -131,52 +147,103 @@ namespace AlineSDLiuyiSBookCarMaintenance {
 
             //If email isn't valid, check the address information.
             if (!isEmail) {
-                //Change backgroud color and display error message for address input.
+                //Change backgroud color, display error message for address input and add control to the list of errors.
                 if (string.IsNullOrEmpty(address)) {
                     txtAddress.BackColor = Color.LightPink;
                     lblErrors.Text += $"Address is required if an email isn't provided.\n";
+
+                    controlErros.Add(txtAddress);
                 } else {
                     isAddress = true;
                 }
 
-                //Change backgroud color and display error message for city input.
+                //Change backgroud color, display error message for city input and add control to the list of errors.
                 if (string.IsNullOrEmpty(city)) {
                     txtCity.BackColor = Color.LightPink;
                     lblErrors.Text += $"City is required if an email isn't provided.\n";
+
+                    controlErros.Add(txtCity);
                 } else {
                     isCity = true;
                 }
 
-                //Change backgroud color and display error message for province code input.
+                //Change backgroud color, display error message for province code input and add control to the list of errors.
                 if (string.IsNullOrEmpty(provinceCode)) {
                     txtProvinceCode.BackColor = Color.LightPink;
                     lblErrors.Text += $"Province code is required if an email isn't provided.\n";
+
+                    controlErros.Add(txtProvinceCode);
                 } else if (!isProvinceCode) {
                     txtProvinceCode.BackColor = Color.LightPink;
                     lblErrors.Text += $"Enter a valid province code.\n";
+
+                    controlErros.Add(txtProvinceCode);
                 }
 
-                //Change backgroud color and display error message for postal code input.
+                //Change backgroud color, display error message for postal code input and add control to the list of errors.
                 if (string.IsNullOrEmpty(postalCode)) {
                     txtPostalCode.BackColor = Color.LightPink;
                     lblErrors.Text += $"Postal code is required if an email isn't provided.\n";
+
+                    controlErros.Add(txtPostalCode);
                 } else if (!isPostalCode) {
                     txtPostalCode.BackColor = Color.LightPink;
                     lblErrors.Text += $"Enter a valid postal code.\n";
+
+                    controlErros.Add(txtPostalCode);
                 }
             }
 
+            //Change backgroud color, display error message for home phone and cell phone inputs and add control to the list of errors.
             if (string.IsNullOrEmpty(homePhone) && string.IsNullOrEmpty(cellPhone)) {
                 txtHomePhone.BackColor = Color.LightPink;
                 txtCellPhone.BackColor = Color.LightPink;
                 lblErrors.Text += $"A contact phone number must be provided.\n";
+
+                controlErros.Add(txtHomePhone);
             } else if (!isHomePhone && !isCellPhone) {
                 txtHomePhone.BackColor = Color.LightPink;
                 txtCellPhone.BackColor = Color.LightPink;
                 lblErrors.Text += $"Please enter a valid home or cell phone number.\n";
-            } else {
-                //txtProblem.Text = homePhone;
+
+                controlErros.Add(txtHomePhone);
             }
+
+            //Change backgroud color, display error message for make and model input and add control to the list of errors.
+            if (string.IsNullOrEmpty(makeModel)) {
+                txtMakeModel.BackColor = Color.LightPink;
+                lblErrors.Text += $"Please enter a make and model.\n";
+
+                controlErros.Add(txtMakeModel);
+            } else {
+                isMakeModel = true;
+            }
+
+            //Change backgroud color, display error message for year input and add control to the list of errors.
+            if (!string.IsNullOrEmpty(year)) {
+                isYear = int.TryParse(year, out int yearNumber);
+
+                if (!isYear || yearNumber < 1900 || yearNumber > DateTime.Today.Year + 1) {
+                    txtYear.BackColor = Color.LightPink;
+                    lblErrors.Text += $"Please enter a valid year.\n";
+
+                    controlErros.Add(txtYear);
+
+                    isYear = false;
+                }
+            }
+
+            //Display error message for appointment date input and add control to the list of errors.
+            if (appointmentDate < DateTime.Now.Date) {
+                lblErrors.Text += "Please enter a valid date.\n";
+
+                controlErros.Add(dtpDate);
+            } else {
+                isAppointmentDate = true;
+            }
+
+            //Check the first input with an error and seet focus.
+            controlErros[0].Focus();
         }
 
         private void btnReset_Click(object sender, EventArgs e) {
