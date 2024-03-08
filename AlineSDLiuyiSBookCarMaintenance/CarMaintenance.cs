@@ -18,6 +18,7 @@ using System.Xml.Linq;
 //Revision History:
 //REV00 - 2024/03/06 - Initial version
 //REV01 - 2024/03/07 - Validation helper class: postal code, province code and phone number. Close and Reset buttons. Name, address and email inputs.
+//REV02 - 2024/03/08 - City, province code, postal code, home phone and cell phone inputs.
 
 namespace AlineSDLiuyiSBookCarMaintenance {
     public partial class CarMaintenance : Form {
@@ -40,7 +41,7 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             txtCustomerName.BackColor = SystemColors.Window;
             txtAddress.BackColor = SystemColors.Window;
             txtCity.BackColor = SystemColors.Window;
-            txtProvince.BackColor = SystemColors.Window;
+            txtProvinceCode.BackColor = SystemColors.Window;
             txtPostalCode.BackColor = SystemColors.Window;
             txtHomePhone.BackColor = SystemColors.Window;
             txtCellPhone.BackColor = SystemColors.Window;
@@ -50,12 +51,12 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             txtProblem.BackColor = SystemColors.Window;
         }
 
-        private void ResetInputs () {
+        private void ResetInputs() {
             //Clear input fields.
             txtCustomerName.Text = string.Empty;
             txtAddress.Text = string.Empty;
             txtCity.Text = string.Empty;
-            txtProvince.Text = string.Empty;
+            txtProvinceCode.Text = string.Empty;
             txtPostalCode.Text = string.Empty;
             txtHomePhone.Text = string.Empty;
             txtCellPhone.Text = string.Empty;
@@ -75,12 +76,42 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             string address = ValidationHelper.Capitalize((txtAddress.Text).Trim());
             bool isAddress = false;
 
+            string city = ValidationHelper.Capitalize((txtCity.Text).Trim());
+            bool isCity = false;
+
+            string provinceCode = (txtProvinceCode.Text).Trim().ToUpper();
+            bool isProvinceCode = ValidationHelper.IsValidProvinceCode(provinceCode);
+
+            string postalCode = (txtPostalCode.Text).Trim().ToUpper();
+            bool isPostalCode = ValidationHelper.IsValidPostalCode(postalCode);
+
+            string homePhone = (txtHomePhone.Text).Trim();
+            bool isHomePhone = ValidationHelper.IsValidPhoneNumber(homePhone);
+
+            string cellPhone = (txtCellPhone.Text).Trim();
+            bool isCellPhone = ValidationHelper.IsValidPhoneNumber(cellPhone);
+
             string email = (txtEmail.Text).Trim();
             bool isEmail = false;
 
             ChangeToInitialState();
 
-            //Change backgroud color, display error message for customer name input and capitalize it.
+            //Insert an empty space in postal code if it doesn't already have.
+            if (!postalCode.Contains(' ') && isPostalCode) {
+                postalCode = postalCode.Substring(0, 3) + " " + postalCode.Substring(3);
+            }
+
+            //Insert dashes in home phone if it doesn't already have.
+            if (!homePhone.Contains('-') && isHomePhone) {
+                homePhone = homePhone.Substring(0, 3) + "-" + homePhone.Substring(3, 3) + "-" + homePhone.Substring(6);
+            }
+
+            //Insert dashes in cell phone if it doesn't already have.
+            if (!cellPhone.Contains('-') && isCellPhone) {
+                cellPhone = cellPhone.Substring(0, 3) + "-" + cellPhone.Substring(3, 3) + "-" + cellPhone.Substring(6);
+            }
+
+            //Change backgroud color and display error message for customer name input.
             if (string.IsNullOrEmpty(customerName)) {
                 txtCustomerName.BackColor = Color.LightPink;
                 lblErrors.Text += $"Please enter a valid customer name.\n";
@@ -100,13 +131,51 @@ namespace AlineSDLiuyiSBookCarMaintenance {
 
             //If email isn't valid, check the address information.
             if (!isEmail) {
-                //Change backgroud color, display error message for address input and capitalize it.
+                //Change backgroud color and display error message for address input.
                 if (string.IsNullOrEmpty(address)) {
                     txtAddress.BackColor = Color.LightPink;
                     lblErrors.Text += $"Address is required if an email isn't provided.\n";
                 } else {
                     isAddress = true;
                 }
+
+                //Change backgroud color and display error message for city input.
+                if (string.IsNullOrEmpty(city)) {
+                    txtCity.BackColor = Color.LightPink;
+                    lblErrors.Text += $"City is required if an email isn't provided.\n";
+                } else {
+                    isCity = true;
+                }
+
+                //Change backgroud color and display error message for province code input.
+                if (string.IsNullOrEmpty(provinceCode)) {
+                    txtProvinceCode.BackColor = Color.LightPink;
+                    lblErrors.Text += $"Province code is required if an email isn't provided.\n";
+                } else if (!isProvinceCode) {
+                    txtProvinceCode.BackColor = Color.LightPink;
+                    lblErrors.Text += $"Enter a valid province code.\n";
+                }
+
+                //Change backgroud color and display error message for postal code input.
+                if (string.IsNullOrEmpty(postalCode)) {
+                    txtPostalCode.BackColor = Color.LightPink;
+                    lblErrors.Text += $"Postal code is required if an email isn't provided.\n";
+                } else if (!isPostalCode) {
+                    txtPostalCode.BackColor = Color.LightPink;
+                    lblErrors.Text += $"Enter a valid postal code.\n";
+                }
+            }
+
+            if (string.IsNullOrEmpty(homePhone) && string.IsNullOrEmpty(cellPhone)) {
+                txtHomePhone.BackColor = Color.LightPink;
+                txtCellPhone.BackColor = Color.LightPink;
+                lblErrors.Text += $"A contact phone number must be provided.\n";
+            } else if (!isHomePhone && !isCellPhone) {
+                txtHomePhone.BackColor = Color.LightPink;
+                txtCellPhone.BackColor = Color.LightPink;
+                lblErrors.Text += $"Please enter a valid home or cell phone number.\n";
+            } else {
+                //txtProblem.Text = homePhone;
             }
         }
 
@@ -124,7 +193,7 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             txtCustomerName.Text = "Homer Simpson";
             txtAddress.Text = "742 Evergreen Terrace";
             txtCity.Text = "Springfield";
-            txtProvince.Text = "ON";
+            txtProvinceCode.Text = "ON";
             txtPostalCode.Text = "N2L 2R7";
             txtHomePhone.Text = "123-123-1234";
             txtCellPhone.Text = "123-123-1234";

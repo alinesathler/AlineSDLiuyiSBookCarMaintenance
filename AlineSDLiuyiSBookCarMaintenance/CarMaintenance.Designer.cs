@@ -27,7 +27,7 @@
             this.txtCustomerName = new System.Windows.Forms.TextBox();
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.lblAddress = new System.Windows.Forms.Label();
-            this.txtProvince = new System.Windows.Forms.TextBox();
+            this.txtProvinceCode = new System.Windows.Forms.TextBox();
             this.lvlProvince = new System.Windows.Forms.Label();
             this.txtCity = new System.Windows.Forms.TextBox();
             this.lblCity = new System.Windows.Forms.Label();
@@ -88,12 +88,12 @@
             this.lblAddress.TabIndex = 2;
             this.lblAddress.Text = "Address: ";
             // 
-            // txtProvince
+            // txtProvinceCode
             // 
-            this.txtProvince.Location = new System.Drawing.Point(176, 127);
-            this.txtProvince.Name = "txtProvince";
-            this.txtProvince.Size = new System.Drawing.Size(253, 22);
-            this.txtProvince.TabIndex = 7;
+            this.txtProvinceCode.Location = new System.Drawing.Point(176, 127);
+            this.txtProvinceCode.Name = "txtProvinceCode";
+            this.txtProvinceCode.Size = new System.Drawing.Size(253, 22);
+            this.txtProvinceCode.TabIndex = 7;
             // 
             // lvlProvince
             // 
@@ -336,7 +336,7 @@
             this.Controls.Add(this.lblHomePhone);
             this.Controls.Add(this.txtPostalCode);
             this.Controls.Add(this.lblPostalCode);
-            this.Controls.Add(this.txtProvince);
+            this.Controls.Add(this.txtProvinceCode);
             this.Controls.Add(this.lvlProvince);
             this.Controls.Add(this.txtCity);
             this.Controls.Add(this.lblCity);
@@ -359,7 +359,7 @@
         private System.Windows.Forms.TextBox txtCustomerName;
         private System.Windows.Forms.TextBox txtAddress;
         private System.Windows.Forms.Label lblAddress;
-        private System.Windows.Forms.TextBox txtProvince;
+        private System.Windows.Forms.TextBox txtProvinceCode;
         private System.Windows.Forms.Label lvlProvince;
         private System.Windows.Forms.TextBox txtCity;
         private System.Windows.Forms.Label lblCity;
