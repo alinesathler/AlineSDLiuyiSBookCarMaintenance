@@ -17,6 +17,7 @@ using System.Xml.Linq;
 //Purpose: C# Windows Form to booking car maintenance
 //Revision History:
 //REV00 - 2024/03/06 - Initial version
+//REV01 - 2024/03/07 - Validation helper class: postal code, province code and phone number. Close and Reset buttons. Name, address and email inputs.
 
 namespace AlineSDLiuyiSBookCarMaintenance {
     public partial class CarMaintenance : Form {
