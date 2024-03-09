@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection.Emit;
@@ -21,6 +22,7 @@ using System.Xml.Linq;
 //REV01 - 2024/03/07 - Validation helper class: postal code, province code and phone number. Close and Reset buttons. Name, address and email inputs.
 //REV02 - 2024/03/08 - City, province code, postal code, home phone and cell phone inputs.
 //REV03 - 2024/03/08 - Make and model, year and appointment date inputs. Set focus to first input with an error.
+//REV04 - 2024/03/08 - Save appointment to file.
 
 namespace AlineSDLiuyiSBookCarMaintenance {
     public partial class CarMaintenance : Form {
@@ -38,6 +40,9 @@ namespace AlineSDLiuyiSBookCarMaintenance {
         private void ChangeToInitialState() {
             //Clear errors.
             lblErrors.Text = String.Empty;
+
+            //Clear status.
+            toolStripStatusLabel.Text = String.Empty;
 
             //Reset backgrounds colors.
             txtCustomerName.BackColor = SystemColors.Window;
@@ -100,10 +105,12 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             bool isMakeModel = false;
 
             string year = (txtYear.Text).Trim();
-            bool isYear = false;
+            bool isYear = true;
 
             DateTime appointmentDate = dtpDate.Value.Date;
             bool isAppointmentDate = false;
+
+            string problem = (txtProblem.Text).Trim();
 
             //Instanciating a list with controls that have errors.
             List <Control> controlErros = new List<Control>();
@@ -243,7 +250,31 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             }
 
             //Check the first input with an error and seet focus.
-            controlErros[0].Focus();
+            if (controlErros.Count > 0) {
+                controlErros[0].Focus();
+            }
+            
+            //If data is valid, save it in the file.
+            if (isName && (isEmail || (isAddress && isCity && isProvinceCode && isPostalCode)) && (isHomePhone || isCellPhone) && isMakeModel && isYear && isAppointmentDate) {
+                using (StreamWriter textOut = new StreamWriter(new FileStream(Path.GetDirectoryName(Application.ExecutablePath) + @"\Appointments.txt", FileMode.Append))) {
+                    textOut.Write(customerName + "|");
+                    textOut.Write(address + "|");
+                    textOut.Write(city + "|");
+                    textOut.Write(provinceCode + "|");
+                    textOut.Write(postalCode + "|");
+                    textOut.Write(homePhone + "|");
+                    textOut.Write(cellPhone + "|");
+                    textOut.Write(email + "|");
+                    textOut.Write(makeModel + "|");
+                    textOut.Write(year + "|");
+                    textOut.Write(appointmentDate.ToString("dd/MM/yyyy") + "|");
+                    textOut.WriteLine(problem + "|");
+                }
+
+
+                //Inform user that appointment was saved.
+                toolStripStatusLabel.Text = "Appointment saved.";
+            }
         }
 
         private void btnReset_Click(object sender, EventArgs e) {

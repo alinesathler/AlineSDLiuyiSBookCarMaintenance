@@ -52,6 +52,9 @@
             this.btnReset = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnPreFill = new System.Windows.Forms.Button();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblName
@@ -310,11 +313,28 @@
             this.btnPreFill.UseVisualStyleBackColor = true;
             this.btnPreFill.Click += new System.EventHandler(this.btnPreFill_Click);
             // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel});
+            this.statusStrip.Location = new System.Drawing.Point(0, 470);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(982, 22);
+            this.statusStrip.TabIndex = 30;
+            this.statusStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(112, 17);
+            this.toolStripStatusLabel.Text = "toolStripStatusLabel";
+            // 
             // CarMaintenance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(982, 492);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.btnPreFill);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnReset);
@@ -348,6 +368,8 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "CarMaintenance";
             this.Text = "Book Car Maintenance";
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -384,6 +406,8 @@
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Button btnPreFill;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
     }
 }
 
