@@ -23,6 +23,7 @@ using System.Xml.Linq;
 //REV02 - 2024/03/08 - City, province code, postal code, home phone and cell phone inputs.
 //REV03 - 2024/03/08 - Make and model, year and appointment date inputs. Set focus to first input with an error.
 //REV04 - 2024/03/08 - Save appointment to file.
+//REV05 - 2024/03/12 - Summary to methods and class.
 
 namespace AlineSDLiuyiSBookCarMaintenance {
     public partial class CarMaintenance : Form {
@@ -36,7 +37,9 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             ResetInputs();
         }
 
-        //Clean error message and background colors for the default.
+        /// <summary>
+        /// Clean error message and background colors for the initial state.
+        /// </summary>
         private void ChangeToInitialState() {
             //Clear errors.
             lblErrors.Text = String.Empty;
@@ -58,8 +61,10 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             txtProblem.BackColor = SystemColors.Window;
         }
 
+        /// <summary>
+        /// Clear input fields.
+        /// </summary>
         private void ResetInputs() {
-            //Clear input fields.
             txtCustomerName.Text = string.Empty;
             txtAddress.Text = string.Empty;
             txtCity.Text = string.Empty;
@@ -117,20 +122,14 @@ namespace AlineSDLiuyiSBookCarMaintenance {
 
             ChangeToInitialState();
 
-            //Insert an empty space in postal code if it doesn't already have.
-            if (!postalCode.Contains(' ') && isPostalCode) {
-                postalCode = postalCode.Substring(0, 3) + " " + postalCode.Substring(3);
-            }
+            //Format postal code.
+            postalCode = ValidationHelper.FormatPostalCode(postalCode);
 
-            //Insert dashes in home phone if it doesn't already have.
-            if (!homePhone.Contains('-') && isHomePhone) {
-                homePhone = homePhone.Substring(0, 3) + "-" + homePhone.Substring(3, 3) + "-" + homePhone.Substring(6);
-            }
+            //Format home phone number.
+            homePhone = ValidationHelper.FormatPhone(homePhone);
 
-            //Insert dashes in cell phone if it doesn't already have.
-            if (!cellPhone.Contains('-') && isCellPhone) {
-                cellPhone = cellPhone.Substring(0, 3) + "-" + cellPhone.Substring(3, 3) + "-" + cellPhone.Substring(6);
-            }
+            //Format cell phone number.
+            cellPhone = ValidationHelper.FormatPhone(cellPhone);
 
             //Change backgroud color, display error message for customer name input and add control to the list of errors.
             if (string.IsNullOrEmpty(customerName)) {
@@ -271,9 +270,22 @@ namespace AlineSDLiuyiSBookCarMaintenance {
                     textOut.WriteLine(problem + "|");
                 }
 
+                //Reformat inputs.
+                txtCustomerName.Text = customerName;
+                txtAddress.Text = address;
+                txtCity.Text = city;
+                txtProvinceCode.Text = provinceCode;
+                txtPostalCode.Text = postalCode;
+                txtHomePhone.Text = homePhone;
+                txtCellPhone.Text = cellPhone;
+                txtEmail.Text = email;
+                txtMakeModel.Text = makeModel;
+                txtYear.Text = year;
 
                 //Inform user that appointment was saved.
                 toolStripStatusLabel.Text = "Appointment saved.";
+
+                ChangeToInitialState();
             }
         }
 

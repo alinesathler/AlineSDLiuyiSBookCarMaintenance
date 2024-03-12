@@ -6,9 +6,15 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AlineSDLiuyiSBookCarMaintenance {
-    //Validation class
+    /// <summary>
+    /// Validate and format the inputs.
+    /// </summary>
     internal class ValidationHelper {
-        //Capitalize strings.
+        /// <summary>
+        /// Capitalize strings.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>A string capitalized.</returns>
         public static string Capitalize (string input) {
             string output = input.Trim();
 
@@ -31,7 +37,11 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             return output;
         }
 
-        //Check if postal code is valid.
+        /// <summary>
+        /// Check if postal code is valid.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>True is the parameter is a valid postal code; otherwise, false.</returns>
         public static bool IsValidPostalCode(string input) {
             bool isValid = false;
 
@@ -45,7 +55,11 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             return isValid;
         }
 
-        //Check if province code is valid.
+        /// <summary>
+        /// Check if province code is valid.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>True is the parameter is a valid canadian province code; otherwise, false.</returns>
         public static bool IsValidProvinceCode(string input) {
             bool isValid = false;
 
@@ -59,7 +73,11 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             return isValid;
         }
 
-        //Check if phone number is valid.
+        /// <summary>
+        /// Check if phone number is valid.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>True is the parameter is a valid phone number; otherwise, false.</returns>
         public static bool IsValidPhoneNumber(string input) {
             bool isValid = false;
 
@@ -71,6 +89,36 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             }
 
             return isValid;
+        }
+
+        /// <summary>
+        /// Insert an empty space in postal code if it doesn't already have it.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>A string in postal code format with white space.</returns>
+        public static string FormatPostalCode(string input) {
+            string output = input.Trim();
+
+            if (!output.Contains(' ') && IsValidPostalCode(output)) {
+                output = input.Substring(0, 3) + " " + input.Substring(3);
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Insert dashes in phone number if it doesn't already have it.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>A string in phone number format with dashes.</returns>
+        public static string FormatPhone(string input) {
+            string output = input.Trim();
+
+            if (!output.Contains('-') && IsValidPhoneNumber(output)) {
+                output = output.Substring(0, 3) + "-" + output.Substring(3, 3) + "-" + output.Substring(6);
+            }
+
+            return output;
         }
     }
 }
