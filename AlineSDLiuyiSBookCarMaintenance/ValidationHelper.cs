@@ -41,7 +41,7 @@ namespace AlineSDLiuyiSBookCarMaintenance {
         /// Check if postal code is valid.
         /// </summary>
         /// <param name="input"></param>
-        /// <returns>True is the parameter is a valid postal code; otherwise, false.</returns>
+        /// <returns>True if the parameter is a valid postal code; otherwise, false.</returns>
         public static bool IsValidPostalCode(string input) {
             bool isValid = false;
 
@@ -59,7 +59,7 @@ namespace AlineSDLiuyiSBookCarMaintenance {
         /// Check if province code is valid.
         /// </summary>
         /// <param name="input"></param>
-        /// <returns>True is the parameter is a valid canadian province code; otherwise, false.</returns>
+        /// <returns>True if the parameter is a valid canadian province code; otherwise, false.</returns>
         public static bool IsValidProvinceCode(string input) {
             bool isValid = false;
 
@@ -77,7 +77,7 @@ namespace AlineSDLiuyiSBookCarMaintenance {
         /// Check if phone number is valid.
         /// </summary>
         /// <param name="input"></param>
-        /// <returns>True is the parameter is a valid phone number; otherwise, false.</returns>
+        /// <returns>True if the parameter is a valid phone number; otherwise, false.</returns>
         public static bool IsValidPhoneNumber(string input) {
             bool isValid = false;
 

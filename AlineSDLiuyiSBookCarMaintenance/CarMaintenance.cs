@@ -25,6 +25,8 @@ using System.Xml.Linq;
 //REV04 - 2024/03/08 - Save appointment to file.
 //REV05 - 2024/03/12 - Summary to methods and class.
 //REV06 - 2024/03/16 - Clear information of optional inputs when the validation fails.
+//REV07 - 2024/03/16 - Typo correction.
+
 
 namespace AlineSDLiuyiSBookCarMaintenance {
     public partial class CarMaintenance : Form {
@@ -324,7 +326,7 @@ namespace AlineSDLiuyiSBookCarMaintenance {
             txtEmail.Text = "test@test.com";
             txtMakeModel.Text = "Honda Civic";
             txtYear.Text = "2021";
-            txtProblem.Text = "Bla bla bla";
+            txtProblem.Text = "Brake isn't working";
             dtpDate.Value = DateTime.Today.Date;
         }
     }
