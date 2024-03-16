@@ -114,8 +114,14 @@ namespace AlineSDLiuyiSBookCarMaintenance {
         public static string FormatPhone(string input) {
             string output = input.Trim();
 
-            if (!output.Contains('-') && IsValidPhoneNumber(output)) {
-                output = output.Substring(0, 3) + "-" + output.Substring(3, 3) + "-" + output.Substring(6);
+            if (IsValidPhoneNumber(output)) {
+                if (output[3] != '-') {
+                    output = output.Substring(0, 3) + "-" + output.Substring(3);
+                }
+
+                if (output[7] != '-') {
+                    output = output.Substring(0, 7) + "-" + output.Substring(7);
+                }
             }
 
             return output;

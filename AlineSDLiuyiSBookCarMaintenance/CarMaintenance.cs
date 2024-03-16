@@ -24,6 +24,7 @@ using System.Xml.Linq;
 //REV03 - 2024/03/08 - Make and model, year and appointment date inputs. Set focus to first input with an error.
 //REV04 - 2024/03/08 - Save appointment to file.
 //REV05 - 2024/03/12 - Summary to methods and class.
+//REV06 - 2024/03/16 - Clear information of optional inputs when the validation fails.
 
 namespace AlineSDLiuyiSBookCarMaintenance {
     public partial class CarMaintenance : Form {
@@ -148,6 +149,7 @@ namespace AlineSDLiuyiSBookCarMaintenance {
 
                     isEmail = true;
                 } catch (FormatException) {
+                    email = string.Empty;
                 }
             }
 
@@ -198,6 +200,14 @@ namespace AlineSDLiuyiSBookCarMaintenance {
 
                     controlErros.Add(txtPostalCode);
                 }
+            } else {
+                if(!isProvinceCode) {
+                    provinceCode = string.Empty;
+                }
+
+                if (!isPostalCode) {
+                    postalCode = string.Empty;
+                }
             }
 
             //Change backgroud color, display error message for home phone and cell phone inputs and add control to the list of errors.
@@ -213,6 +223,10 @@ namespace AlineSDLiuyiSBookCarMaintenance {
                 lblErrors.Text += $"Please enter a valid home or cell phone number.\n";
 
                 controlErros.Add(txtHomePhone);
+            } else if (isHomePhone && !isCellPhone) {
+                cellPhone = string.Empty;
+            } else if (!isHomePhone && isCellPhone) {
+                homePhone = string.Empty;
             }
 
             //Change backgroud color, display error message for make and model input and add control to the list of errors.
